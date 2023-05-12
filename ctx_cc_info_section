@@ -1,0 +1,74 @@
+/**
+ * Add section for Credit Card Information fields to the checkout page
+ */
+
+add_action( 'woocommerce_after_order_notes', 'ctx_cc_info' ); // hooking into woocommerce_after_order_notes to run function ctx_cc_info
+
+function ctx_cc_info( $checkout ) {
+
+	/* Insert section heading */
+    echo '<div id="ctx_cc_num"><h4>' . __('Credit Card Information') . '</h4>';
+
+	/* Insert Credit Card Number field */
+    woocommerce_form_field( 'ctx_cc_num', array(
+        'type'          => 'number',
+        'class'         => array('ctx_cc_info_fields form-row-wide'),
+        'label'         => __('Credit Card Number'),
+        'placeholder'   => __('Enter your card number'),
+		'required' 		=> true,
+        ), $checkout->get_value( 'ctx_cc_num' ));
+	
+	/* Insert line break */
+	echo '';
+	
+	/* Insert Credit Card Expiry Date field */
+	woocommerce_form_field( 'ctx_cc_exp', array(
+        'type'          => 'number',
+        'class'         => array('ctx_cc_info_fields form-row-wide'),
+        'label'         => __('Credit Card Expiry (MM/YY)'),
+        'placeholder'   => __('MM/YY'),
+		'required' 		=> true,
+        ), $checkout->get_value( 'ctx_cc_exp' ));
+	
+	/* Insert line break */
+	echo '';
+	
+	/* Insert Credit Card CVV/CVC Value field */
+	woocommerce_form_field( 'ctx_cc_cvv', array(
+        'type'          => 'number',
+        'class'         => array('ctx_cc_info_fields form-row-wide'),
+        'label'         => __('Credit Card CVV/CVC'),
+        'placeholder'   => __('XXX'),
+		'required' 		=> true,
+        ), $checkout->get_value( 'ctx_cc_cvv' ));
+	
+    echo '</div>';
+
+}
+
+/* Validate Credit Card Number field */
+add_action( 'woocommerce_checkout_process', 'validate_ctx_cc_num' );
+  
+function validate_ctx_cc_num() {    
+   if ( ! $_POST['ctx_cc_num'] ) {
+      wc_add_notice( 'Please enter your Credit Card Number', 'error' );
+   }
+}
+
+/* Validate Credit Card Expiry field */
+add_action( 'woocommerce_checkout_process', 'validate_ctx_cc_exp' );
+  
+function validate_ctx_cc_exp() {    
+   if ( ! $_POST['ctx_cc_exp'] ) {
+      wc_add_notice( 'Please enter your Credit Card Expiry MM/YY', 'error' );
+   }
+}
+
+/* Validate Credit Card CVV/CVC Value field */
+add_action( 'woocommerce_checkout_process', 'validate_ctx_cc_cvv' );
+  
+function validate_ctx_cc_cvv() {    
+   if ( ! $_POST['ctx_cc_cvv'] ) {
+      wc_add_notice( 'Please enter your Credit Card CVV/CVC', 'error' );
+   }
+}
